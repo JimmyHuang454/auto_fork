@@ -88,7 +88,9 @@ def UpdateRepo(repo_name, commit_id):
 
 
 def GetProjectRepoList(project_name):
-    req = requests.get("https://api.github.com/orgs/%s/repos" % project_name)
+    url = "https://api.github.com/orgs/%s/repos" % project_name
+    req = requests.get(url, params={'per_page': 100})
+    print(url)
     try:
         res = json.loads(req.content)
         return res
@@ -104,7 +106,10 @@ sing_box_list = GetProjectRepoList("SagerNet")
 save_repo_list = []
 for item in sing_box_list:
     save_repo_list.append(item['full_name'])
+    print(item['full_name'])
 
+print(len(save_repo_list))
+quit()
 i = 0
 for item in save_repo_list:
     n = GetRepoNewestCommit(item)
