@@ -99,7 +99,10 @@ for item in save_repo_list:
     n = GetRepoNewestCommit(item)
     if n > GetRepoCurrentCommit(item):
         print("updating %s." % item)
-        UpdateRepo(item, n)
+        try:
+            UpdateRepo(item, n)
+        except Exception as e:
+            print(e)
     else:
         print("%s not need to update." % item)
     i += 1
