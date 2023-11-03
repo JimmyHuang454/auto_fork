@@ -78,6 +78,7 @@ def UpdateRepo(repo_name, commit_id):
     try:
         ZipDir(new_dir, zip_path)
     except Exception as e:
+        print(e)
         os.remove(zip_path)
         return
     mb_size = os.path.getsize(zip_path) >> 20
