@@ -108,8 +108,6 @@ for item in sing_box_list:
     save_repo_list.append(item['full_name'])
     print(item['full_name'])
 
-print(len(save_repo_list))
-quit()
 i = 0
 for item in save_repo_list:
     n = GetRepoNewestCommit(item)
