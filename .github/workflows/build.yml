@@ -1,0 +1,27 @@
+name: Update
+
+on: [push]
+jobs:
+  setup_env:
+    name: Update
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    permissions: write-all
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v4
+      - run: |
+          pip install requests
+          pip install shutil
+          pip install python-dateutil
+          python ./auto_fork.py
+
+      - name: Update page
+        run: |
+          ls
+          git add --all
+          git commit -am "update"
+          git push origin master --force
