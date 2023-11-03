@@ -75,7 +75,11 @@ def UpdateRepo(repo_name, commit_id):
     newest_commit[repo_name] = commit_id
 
     zip_path = "./dist/" + name + ".zip"
-    ZipDir(new_dir, zip_path)
+    try:
+        ZipDir(new_dir, zip_path)
+    except Exception as e:
+        os.remove(zip_path)
+        return
     mb_size = os.path.getsize(zip_path) >> 20
     if mb_size >= 100:
         os.remove(zip_path)
@@ -108,9 +112,6 @@ for item in save_repo_list:
     #     print("%s not need to update." % item)
     # i += 1
     print("updating %s." % item)
-    try:
-        UpdateRepo(item, n)
-    except Exception as e:
-        print(e)
+    UpdateRepo(item, n)
 
 SaveNewestCommit()
