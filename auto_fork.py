@@ -76,7 +76,8 @@ def UpdateRepo(repo_name, commit_id):
 
     zip_path = "./dist/" + name + ".zip"
     ZipDir(new_dir, zip_path)
-    if os.path.getsize(zip_path):
+    mb_size = os.path.getsize(zip_path) >> 20
+    if mb_size >= 100:
         os.remove(zip_path)
         print(zip_path + " too large.")
 
