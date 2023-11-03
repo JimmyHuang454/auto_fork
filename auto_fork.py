@@ -5,6 +5,7 @@ import os
 import shutil
 import time
 from dateutil import parser
+import zipfile
 
 # https://api.github.com/repos/SagerNet/sing-box/commits
 
@@ -49,22 +50,33 @@ def GetRepoCurrentCommit(repo_name):
     return newest_commit[repo_name]
 
 
+def ZipDir(dirpath, outFullName):
+    """
+    压缩指定文件夹
+    :param dirpath: 目标文件夹路径
+    :param outFullName: 压缩文件保存路径+xxxx.zip
+    :return: 无
+    """
+    zip = zipfile.ZipFile(outFullName, "w", zipfile.ZIP_DEFLATED)
+    for path, dirnames, filenames in os.walk(dirpath):
+        # 去掉目标跟路径，只对目标文件夹下边的文件及文件夹进行压缩
+        fpath = path.replace(dirpath, '')
+
+        for filename in filenames:
+            zip.write(os.path.join(path, filename),
+                      os.path.join(fpath, filename))
+    zip.close()
+
+
 def UpdateRepo(repo_name, commit_id):
     # clone new version
-    cmd = "git clone git@github.com:%s.git" % repo_name
-    new_dir = "./%s_%s" % (repo_name.replace("/", "_"), commit_id)
+    cmd = "git clone git@github.com:%s.git --depth=1" % repo_name
+    name = "%s_%s" % (repo_name.replace("/", "_"), commit_id)
+    new_dir = "./%s" % name
     os.makedirs(new_dir)
     subprocess.Popen(cmd, cwd=new_dir, shell=True).wait()
     newest_commit[repo_name] = commit_id
-
-    # delete old version
-    if repo_name in newest_commit:
-        old_dir = "./%s_%s" % (repo_name.replace(
-            "/", "_"), newest_commit[repo_name])
-        if os.path.exists(old_dir) and os.path.getsize(
-                old_dir) < os.path.getsize(new_dir):
-            print("deleted " + old_dir)
-            shutil.rmtree(old_dir)
+    ZipDir(new_dir, "./dist/" + name + ".zip")
 
 
 def GetProjectRepoList(project_name):
@@ -94,7 +106,6 @@ for item in save_repo_list:
     else:
         print("%s not need to update." % item)
     i += 1
-    if i > 10:
-        break
+    break
 
 SaveNewestCommit()
