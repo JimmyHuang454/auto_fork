@@ -12,13 +12,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Setup SSH
+        uses: MrSquaare/ssh-setup-action@v1
+        with:
+          host: github.com
+          private-key: ${{ secrets.SSH_KEY }}
+
       - uses: actions/setup-python@v4
       - run: |
           pip install requests
           pip install python-dateutil
           python ./auto_fork.py
 
-      - name: Update page
+      - name: Push
         run: |
           ls
           git add --all
