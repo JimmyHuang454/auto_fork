@@ -67,13 +67,18 @@ def ZipDir(dirpath, outFullName):
 
 def UpdateRepo(repo_name, commit_id):
     # clone new version
-    cmd = "git clone git@github.com:%s.git --depth=1" % repo_name
+    cmd = "git clone git@github.com:%s.git" % repo_name
     name = "%s_%s" % (repo_name.replace("/", "_"), commit_id)
     new_dir = "./%s" % name
     os.makedirs(new_dir)
     subprocess.Popen(cmd, cwd=new_dir, shell=True).wait()
     newest_commit[repo_name] = commit_id
-    ZipDir(new_dir, "./dist/" + name + ".zip")
+
+    zip_path = "./dist/" + name + ".zip"
+    ZipDir(new_dir, zip_path)
+    if os.path.getsize(zip_path):
+        os.remove(zip_path)
+        print(zip_path + " too large.")
 
 
 def GetProjectRepoList(project_name):
