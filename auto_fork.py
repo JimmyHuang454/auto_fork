@@ -67,7 +67,7 @@ def ZipDir(dirpath, outFullName):
 
 def UpdateRepo(repo_name, commit_id):
     # clone new version
-    cmd = "git clone git@github.com:%s.git" % repo_name
+    cmd = "git clone git@github.com:%s.git --depth=1" % repo_name
     name = "%s_%s" % (repo_name.replace("/", "_"), commit_id)
     new_dir = "./%s" % name
     os.makedirs(new_dir)
@@ -97,14 +97,14 @@ for item in sing_box_list:
 i = 0
 for item in save_repo_list:
     n = GetRepoNewestCommit(item)
-    if n > GetRepoCurrentCommit(item):
-        print("updating %s." % item)
-        try:
-            UpdateRepo(item, n)
-        except Exception as e:
-            print(e)
-    else:
-        print("%s not need to update." % item)
-    i += 1
+    # if n > GetRepoCurrentCommit(item):
+    # else:
+    #     print("%s not need to update." % item)
+    # i += 1
+    print("updating %s." % item)
+    try:
+        UpdateRepo(item, n)
+    except Exception as e:
+        print(e)
 
 SaveNewestCommit()
