@@ -32,7 +32,7 @@ jobs:
           git config --global user.name 'JimmyHuang454'
           git config --global user.email 'JimmyHuang454@gmail.com'
           git config --global init.defaultBranch 'master'
-          git module add --all
+          git add --all
           git commit -am "update"
           git remote add origin git@github.com:JimmyHuang454/sing-box-backup.git
           git push origin master --force
