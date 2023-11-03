@@ -13,23 +13,20 @@ newest_commit = {}
 
 
 def ReadNewestCommit():
-    path = "./version.txt"
-    if not os.path.exists(path):
-        content = "{}"
-    else:
-        with open("./version.txt", mode="r+") as f:
-            content = f.read()
-            if content == "":
-                content = "{}"
-        f.close()
+    req = requests.get(
+        "https://raw.githubusercontent.com/jimmyhuang454/sing-box-backup/HEAD/version.txt"
+    )
     global newest_commit
-    newest_commit = json.loads(content)
+    try:
+        newest_commit = json.loads(req.content)
+    except Exception as e:
+        newest_commit = {}
     print(newest_commit)
 
 
 def SaveNewestCommit():
     global newest_commit
-    with open("./version.txt", mode="w+") as f:
+    with open("./dist/version.txt", mode="w+") as f:
         f.write(json.dumps(newest_commit))
 
 
